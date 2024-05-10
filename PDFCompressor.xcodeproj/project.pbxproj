@@ -11,6 +11,9 @@
 		D014F6962BEE3AFF009237AB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D014F6952BEE3AFF009237AB /* ViewController.swift */; };
 		D014F6982BEE3B01009237AB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D014F6972BEE3B01009237AB /* Assets.xcassets */; };
 		D014F69B2BEE3B01009237AB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D014F6992BEE3B01009237AB /* Main.storyboard */; };
+		D014F6A92BEE3B20009237AB /* Compress PDF.qfilter in Resources */ = {isa = PBXBuildFile; fileRef = D014F6A62BEE3B20009237AB /* Compress PDF.qfilter */; };
+		D014F6AA2BEE3B20009237AB /* PDFCompressionError.swift in Sources */ = {isa = PBXBuildFile; fileRef = D014F6A72BEE3B20009237AB /* PDFCompressionError.swift */; };
+		D014F6AB2BEE3B20009237AB /* PDFCompressor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D014F6A82BEE3B20009237AB /* PDFCompressor.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,6 +23,10 @@
 		D014F6972BEE3B01009237AB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D014F69A2BEE3B01009237AB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D014F69C2BEE3B01009237AB /* PDFCompressor.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PDFCompressor.entitlements; sourceTree = "<group>"; };
+		D014F6A32BEE3B20009237AB /* PDFCompressor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDFCompressor.h; sourceTree = "<group>"; };
+		D014F6A62BEE3B20009237AB /* Compress PDF.qfilter */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Compress PDF.qfilter"; sourceTree = "<group>"; };
+		D014F6A72BEE3B20009237AB /* PDFCompressionError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDFCompressionError.swift; sourceTree = "<group>"; };
+		D014F6A82BEE3B20009237AB /* PDFCompressor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDFCompressor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,8 +64,36 @@
 				D014F6972BEE3B01009237AB /* Assets.xcassets */,
 				D014F6992BEE3B01009237AB /* Main.storyboard */,
 				D014F69C2BEE3B01009237AB /* PDFCompressor.entitlements */,
+				D014F6A22BEE3B20009237AB /* PDFCompressor */,
 			);
 			path = PDFCompressor;
+			sourceTree = "<group>";
+		};
+		D014F6A22BEE3B20009237AB /* PDFCompressor */ = {
+			isa = PBXGroup;
+			children = (
+				D014F6A32BEE3B20009237AB /* PDFCompressor.h */,
+				D014F6A42BEE3B20009237AB /* Resources */,
+				D014F6A72BEE3B20009237AB /* PDFCompressionError.swift */,
+				D014F6A82BEE3B20009237AB /* PDFCompressor.swift */,
+			);
+			path = PDFCompressor;
+			sourceTree = "<group>";
+		};
+		D014F6A42BEE3B20009237AB /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				D014F6A52BEE3B20009237AB /* Filters */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		D014F6A52BEE3B20009237AB /* Filters */ = {
+			isa = PBXGroup;
+			children = (
+				D014F6A62BEE3B20009237AB /* Compress PDF.qfilter */,
+			);
+			path = Filters;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -121,6 +156,7 @@
 			files = (
 				D014F6982BEE3B01009237AB /* Assets.xcassets in Resources */,
 				D014F69B2BEE3B01009237AB /* Main.storyboard in Resources */,
+				D014F6A92BEE3B20009237AB /* Compress PDF.qfilter in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -131,6 +167,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D014F6AA2BEE3B20009237AB /* PDFCompressionError.swift in Sources */,
+				D014F6AB2BEE3B20009237AB /* PDFCompressor.swift in Sources */,
 				D014F6962BEE3AFF009237AB /* ViewController.swift in Sources */,
 				D014F6942BEE3AFF009237AB /* AppDelegate.swift in Sources */,
 			);
