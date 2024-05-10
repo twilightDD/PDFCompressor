@@ -115,9 +115,10 @@ public class PDFCompressor {
         // All PDF pages drawn after the filter is applied will be compressed
         self.quartz_filter.apply(to: outPDF)
         
+        let compressTimer = SOXTiming(title: "Compressed \(inPDF.numberOfPages) pages in")
         // Copy every page to new output document
         for index in 1...inPDF.numberOfPages {
-            print("compressing page \(index)")
+            let timer = SOXTiming(title: "Page \(index)")
             // Get current page and its size (bounds) from input document
             let page: CGPDFPage = inPDF.page(at: index)!
             var pageMediaBox: CGRect = page.getBoxRect(.mediaBox)
@@ -126,8 +127,9 @@ public class PDFCompressor {
             outPDF.beginPage(mediaBox: &pageMediaBox)
             outPDF.drawPDFPage(page)
             outPDF.endPage()
+            timer.stop()
         }
-        
+        compressTimer.stop()
         // Close output document and return its location
         outPDF.closePDF()
         return (outURL as CFURL)
