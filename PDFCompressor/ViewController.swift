@@ -3,20 +3,24 @@
 //  PDFCompressor
 //
 //  Created by Peter Hauke on 10.05.24.
+//  Copyright © 2020 2sox. All rights reserved.
 //
 
 import Cocoa
+
 
 class ViewController: NSViewController {
 
     //MARK: - Lets and vars
     private var inputURL: URL?
     private var outputURL: URL?
+    private var mode: PDFCompressor.Mode = .serialEncode
     
     //MARK: - IBOutlets
     
     @IBOutlet weak var selectPDFFileButton: NSButton!
     @IBOutlet weak var fileURLLabel: NSTextField!
+    @IBOutlet weak var logTextView: NSTextView!
     @IBOutlet weak var compressButton: NSButton!
     
     
@@ -57,8 +61,15 @@ class ViewController: NSViewController {
             return
         }
     }
+    @IBAction func serialCompressButtonAction(_ sender: NSButton) {
+        startCompression(mode: .serialEncode)
+    }
     
-    @IBAction func compressButtonAction(_ sender: NSButton) {
+    @IBAction func parallelCompressButtonAction(_ sender: NSButton) {
+        startCompression(mode: .parallelEncode)
+    }
+    
+    private func startCompression(mode: PDFCompressor.Mode) {
         guard let inputURL else {
             return }
         guard let outputURL else {
@@ -73,7 +84,7 @@ class ViewController: NSViewController {
 //        outputURL = outURL
         let pdfCompressor = PDFCompressor()
         do {
-            try pdfCompressor.compress(inputURL, out: outputURL)
+            try pdfCompressor.compress(inputURL, out: outputURL, mode: mode, delegate: self)
         }
         catch let compressError {
             print("\(compressError)")
@@ -112,3 +123,10 @@ class ViewController: NSViewController {
     }
 }
 
+extension ViewController: SOXTimingDelegate {
+    
+    func addToLog(_ logline: String) {
+        
+        logTextView.string = logTextView.string.appending("\n\(logline)")
+    }
+}

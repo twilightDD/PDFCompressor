@@ -3,6 +3,7 @@
 //  PDFCompressor
 //
 //  Created by Peter Hauke on 10.05.24.
+//  Copyright © 2020 2sox. All rights reserved.
 //
 
 import Cocoa

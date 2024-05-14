@@ -4,6 +4,7 @@
 //
 //  Created by Maxim Puchkov on 2020-09-24.
 //  Copyright © 2020 Maxim Puchkov. All rights reserved.
+//  Changed by Peter Hauke on 10.05.24.
 //
 
 import Foundation
@@ -15,6 +16,11 @@ import Quartz
  */
 public class PDFCompressor {
     
+    public enum Mode {
+        case parallelEncode
+        case serialEncode
+    }
+    
     //MARK: - Lets and Vars
     /// File name of the default filter (currently the only filter).
     public static let kDefaultFilterName: String = "Compress PDF"
@@ -22,7 +28,7 @@ public class PDFCompressor {
     /// Search framework resources for quartz filter specified by its name.
     ///
     /// - Parameter filterName: name of a bundled quartz filter.
-    public static func getFilterURL(name filterName: String) 
+    public static func getFilterURL(name filterName: String)
     -> URL? {
         let ext = "qfilter"
         let filterURL = Bundle.main.url(forResource: filterName, withExtension: ext)
@@ -80,11 +86,13 @@ public class PDFCompressor {
     ///            if PDF file at `inPath` is not found.
     /// - Returns: location of output document context.
     @discardableResult
-    public func compress(_ inPath: String, out outPath: String) throws 
+    public func compress(_ inPath: String, out outPath: String,
+                         mode: Mode, delegate: SOXTimingDelegate) throws
     -> CFURL {
         let inURL = URL(fileURLWithPath: inPath)
         let outURL = URL(fileURLWithPath: outPath)
-        return try self.compress(inURL, out: outURL)
+        
+        return try self.compress(inURL, out: outURL, mode: mode, delegate: delegate)
     }
     
     
@@ -97,7 +105,7 @@ public class PDFCompressor {
     ///            if PDF file at `inURL` is not found.
     /// - Returns: location of output document context.
     @discardableResult
-    public func compress(_ inURL: URL, out outURL: URL) throws 
+    public func compress(_ inURL: URL, out outURL: URL, mode: Mode, delegate: SOXTimingDelegate) throws
     -> CFURL {
         // Make sure input PDF file at 'inURL' is valid
         guard let inFile = PDFDocument(url: inURL) else {
@@ -106,19 +114,108 @@ public class PDFCompressor {
         
         // Get original input PDF document at 'inURL'
         let inPDF: CGPDFDocument = inFile.documentRef!
-        // Create an empty PDF document at 'outURL'
-        let outContext = CGContext(outURL as CFURL, mediaBox: nil, nil)
+        
+        switch mode {
+            case .parallelEncode:
+                try parallelEncode(inPDF: inPDF, outputURL: outURL, delegate: delegate)
+            case .serialEncode:
+                try serialEncode(inPDF: inPDF, outputURL: outURL, delegate: delegate)
+        }
+    
+        return (outURL as CFURL)
+    }
+    
+    
+    //MARK: - Private Compression Methods
+    private func parallelEncode(inPDF: CGPDFDocument, outputURL: URL, delegate: SOXTimingDelegate) throws {
+        let tempDir = FileManager().temporaryDirectory
+        var tempURLs: [URL?] = [URL?](repeatElement(nil,
+                                                    count: inPDF.numberOfPages + 1))
+        
+        let totalTimer = SOXTiming(title: "Total parallel time \(inPDF.numberOfPages) pages in")
+        
+        let compressionTimer = SOXTiming(title: "compress time \(inPDF.numberOfPages) pages in")
+        
+        // Parallel compression to single page temp files
+        tempURLs.withUnsafeMutableBufferPointer { tempURLsBuffer in
+            DispatchQueue.concurrentPerform(iterations: inPDF.numberOfPages,
+                                            execute: { index in
+                let pageIndex = index + 1
+                
+                // Create an empty temp PDF document
+                let tempURL = tempDir.appendingPathComponent("\(pageIndex)", conformingTo: .pdf)
+                let outPDF = CGContext(tempURL as CFURL, mediaBox: nil, nil)
+                guard let outPDF else {
+                    fatalError() }
+                self.quartz_filter.apply(to: outPDF)  // All PDF pages drawn after the filter is applied will be compressed
+
+                let timer = SOXTiming(title: "Encode and write temp page \(pageIndex)")
+                
+                // Get current page and its size (bounds) from input document
+                let page: CGPDFPage = inPDF.page(at: pageIndex)!
+                var pageMediaBox: CGRect = page.getBoxRect(.mediaBox)
+                
+                // Redraw current page in output document
+                outPDF.beginPage(mediaBox: &pageMediaBox)
+                outPDF.drawPDFPage(page)
+                outPDF.endPage()
+                outPDF.closePDF()
+
+                tempURLsBuffer[pageIndex] = tempURL
+
+                timer.stop()
+            })
+        }
+        
+        compressionTimer.stop(delegate: delegate)
+        
+        // Assemble and write final PDF
+        let outContext = CGContext(outputURL as CFURL, mediaBox: nil, nil)
         guard let outContext else {
             throw  NSError(domain: "cgcontext", code: 100) }
         let outPDF: CGContext = outContext
         
-        // All PDF pages drawn after the filter is applied will be compressed
-        self.quartz_filter.apply(to: outPDF)
+        let writeTimer = SOXTiming(title: "Wrinting")
+        for index in 1...inPDF.numberOfPages {
+            let timer = SOXTiming(title: "assemble final pdf: temp page \(index)")
+            let tempURL: URL = tempURLs[index]!
+            guard let inTempFile = PDFDocument(url: tempURL) else {
+                throw PDFCompressionError.PDFFileNotFoundError(fileURL: tempURL.absoluteURL)
+            }
+            
+            // Get original input PDF document at 'inURL'
+            let inTempPDF: CGPDFDocument = inTempFile.documentRef!
+            let page: CGPDFPage = inTempPDF.page(at: 1)!
+            var pageMediaBox: CGRect = page.getBoxRect(.mediaBox)
+            
+            // Redraw current page in output document
+            outPDF.beginPage(mediaBox: &pageMediaBox)
+            outPDF.drawPDFPage(page)
+            outPDF.endPage()
+            
+            
+            timer.stop(delegate: delegate)
+        }
+        writeTimer.stop(delegate: delegate)
+        outPDF.closePDF()
+        totalTimer.stop(delegate: delegate)
+    }
+    
+    
+    private func serialEncode(inPDF: CGPDFDocument, outputURL: URL, delegate: SOXTimingDelegate) throws {
         
-        let compressTimer = SOXTiming(title: "Compressed \(inPDF.numberOfPages) pages in")
+        // Create outputPDF with compression filter.
+        let outPDF = CGContext(outputURL as CFURL, mediaBox: nil, nil)
+        guard let outPDF else {
+            throw  NSError(domain: "cgcontext", code: 100) }
+        self.quartz_filter.apply(to: outPDF) // All PDF pages drawn after the filter is applied will be compressed
+        
+        let totalTimer = SOXTiming(title: "Total serial time \(inPDF.numberOfPages) pages in")
+        
         // Copy every page to new output document
         for index in 1...inPDF.numberOfPages {
-            let timer = SOXTiming(title: "Page \(index)")
+            let pageTimer = SOXTiming(title: "Encode and write page \(index)")
+            
             // Get current page and its size (bounds) from input document
             let page: CGPDFPage = inPDF.page(at: index)!
             var pageMediaBox: CGRect = page.getBoxRect(.mediaBox)
@@ -127,12 +224,13 @@ public class PDFCompressor {
             outPDF.beginPage(mediaBox: &pageMediaBox)
             outPDF.drawPDFPage(page)
             outPDF.endPage()
-            timer.stop()
+            
+            delegate.addToLog(pageTimer.stop())
         }
-        compressTimer.stop()
-        // Close output document and return its location
+        
         outPDF.closePDF()
-        return (outURL as CFURL)
+        
+        totalTimer.stop(delegate: delegate)
     }
     
 }

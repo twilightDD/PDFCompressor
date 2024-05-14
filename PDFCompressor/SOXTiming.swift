@@ -3,7 +3,7 @@
 //  Landrix Handwerk Mobile
 //
 //  Created by Peter Hauke on 30.01.20.
-//  Copyright © 2020 Landrix Software GmbH & Co. KG. All rights reserved.
+//  Copyright © 2020 2sox. All rights reserved.
 //
 
 import QuartzCore
@@ -43,14 +43,29 @@ class SOXTiming {
         self.title = title
     }
 
-    func stop(enhancedDescription: String? = nil) {
+    
+    @discardableResult
+    func stop(enhancedDescription: String? = nil, delegate: SOXTimingDelegate? = nil)
+    -> String {
         let endTime = CACurrentMediaTime()
         passedTime = endTime - startTime
 
         let finalText = "Passed time:" + (title != nil ? " '\(title!)'" : "") + (enhancedDescription != nil ? " (\(enhancedDescription!))" : "") + ": \(passedTime ?? -1) s"
 
         print(finalText)
+        
+        if let delegate {
+            DispatchQueue.main.async {
+                delegate.addToLog(finalText)
+            }
+        }
+        return finalText
     }
 
     
+}
+
+
+public protocol SOXTimingDelegate {
+    func addToLog(_ logline: String)
 }

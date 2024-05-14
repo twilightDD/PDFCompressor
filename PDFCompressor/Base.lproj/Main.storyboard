@@ -707,11 +707,11 @@
             <objects>
                 <viewController id="XfG-lQ-9wD" customClass="ViewController" customModule="PDFCompressor" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="m2S-Jp-Qdl">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="331"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="SyT-Uc-Tej">
-                                <rect key="frame" x="13" y="223" width="101" height="32"/>
+                                <rect key="frame" x="13" y="284" width="101" height="32"/>
                                 <buttonCell key="cell" type="push" title="Select PDF" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="2iC-q3-Wv8">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -720,8 +720,8 @@
                                     <action selector="selectPDFFileButtonAction:" target="XfG-lQ-9wD" id="UH3-Xo-Jmp"/>
                                 </connections>
                             </button>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="OVq-Ln-E8u">
-                                <rect key="frame" x="20" y="191" width="442" height="16"/>
+                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="OVq-Ln-E8u">
+                                <rect key="frame" x="20" y="252" width="442" height="16"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Label" id="4hx-Vi-2u4">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -729,37 +729,83 @@
                                 </textFieldCell>
                             </textField>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="hRt-JP-b7L">
-                                <rect key="frame" x="371" y="13" width="96" height="32"/>
-                                <buttonCell key="cell" type="push" title="Compress" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="yJ5-hx-Ehc">
+                                <rect key="frame" x="389" y="13" width="78" height="32"/>
+                                <buttonCell key="cell" type="push" title="Parallel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="yJ5-hx-Ehc">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
-                                    <action selector="compressButtonAction:" target="XfG-lQ-9wD" id="bUQ-KD-zgY"/>
+                                    <action selector="parallelCompressButtonAction:" target="XfG-lQ-9wD" id="N2c-E7-Xi7"/>
                                 </connections>
                             </button>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="AmV-Er-DwX">
+                                <rect key="frame" x="315" y="13" width="68" height="32"/>
+                                <buttonCell key="cell" type="push" title="Serial" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="UWY-lR-1OC">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="serialCompressButtonAction:" target="XfG-lQ-9wD" id="Fdm-wq-L5B"/>
+                                </connections>
+                            </button>
+                            <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" translatesAutoresizingMaskIntoConstraints="NO" id="q7X-Op-tmi">
+                                <rect key="frame" x="20" y="54" width="440" height="190"/>
+                                <clipView key="contentView" drawsBackground="NO" id="SEQ-Nh-dg2">
+                                    <rect key="frame" x="0.0" y="0.0" width="425" height="190"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <textView wantsLayer="YES" importsGraphics="NO" richText="NO" verticallyResizable="YES" smartInsertDelete="YES" id="RAU-k5-rLd">
+                                            <rect key="frame" x="0.0" y="0.0" width="425" height="190"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            <size key="minSize" width="425" height="190"/>
+                                            <size key="maxSize" width="436" height="10000000"/>
+                                            <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                        </textView>
+                                    </subviews>
+                                </clipView>
+                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="zWv-We-7Z2">
+                                    <rect key="frame" x="-100" y="-100" width="225" height="15"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </scroller>
+                                <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="HKi-PZ-AlV">
+                                    <rect key="frame" x="425" y="0.0" width="15" height="190"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </scroller>
+                            </scrollView>
                         </subviews>
                         <constraints>
+                            <constraint firstItem="AmV-Er-DwX" firstAttribute="top" secondItem="hRt-JP-b7L" secondAttribute="top" id="77V-6e-gg0"/>
                             <constraint firstAttribute="trailing" secondItem="OVq-Ln-E8u" secondAttribute="trailing" constant="20" symbolic="YES" id="9wT-86-B8B"/>
                             <constraint firstItem="SyT-Uc-Tej" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="20" symbolic="YES" id="Ctw-gp-SMW"/>
+                            <constraint firstItem="AmV-Er-DwX" firstAttribute="width" secondItem="hRt-JP-b7L" secondAttribute="width" multiplier="0.84375" id="EjX-YS-SIZ"/>
                             <constraint firstAttribute="bottom" secondItem="hRt-JP-b7L" secondAttribute="bottom" constant="20" symbolic="YES" id="KYI-Jy-Xfo"/>
                             <constraint firstItem="OVq-Ln-E8u" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="22" id="NIl-5l-5bI"/>
+                            <constraint firstItem="q7X-Op-tmi" firstAttribute="top" secondItem="OVq-Ln-E8u" secondAttribute="bottom" constant="8" symbolic="YES" id="Npe-BX-tn5"/>
+                            <constraint firstItem="q7X-Op-tmi" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" symbolic="YES" id="Pzj-u4-9Ra"/>
                             <constraint firstAttribute="trailing" secondItem="hRt-JP-b7L" secondAttribute="trailing" constant="20" symbolic="YES" id="She-ba-cK8"/>
                             <constraint firstItem="OVq-Ln-E8u" firstAttribute="top" secondItem="SyT-Uc-Tej" secondAttribute="bottom" constant="23" id="Vl3-o2-7LC"/>
                             <constraint firstItem="hRt-JP-b7L" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" id="Wt3-Te-xFi"/>
+                            <constraint firstItem="hRt-JP-b7L" firstAttribute="leading" secondItem="AmV-Er-DwX" secondAttribute="trailing" constant="20" id="XBi-zo-9wT"/>
+                            <constraint firstItem="AmV-Er-DwX" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" symbolic="YES" id="bea-Nl-qzl"/>
+                            <constraint firstAttribute="trailing" secondItem="q7X-Op-tmi" secondAttribute="trailing" constant="20" symbolic="YES" id="mH2-Rl-D5U"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="SyT-Uc-Tej" secondAttribute="trailing" constant="20" id="mUy-gi-btb"/>
+                            <constraint firstItem="hRt-JP-b7L" firstAttribute="top" secondItem="q7X-Op-tmi" secondAttribute="bottom" constant="14" id="maN-aA-ukh"/>
+                            <constraint firstItem="AmV-Er-DwX" firstAttribute="bottom" secondItem="hRt-JP-b7L" secondAttribute="bottom" id="n9n-0i-LRs"/>
                             <constraint firstItem="SyT-Uc-Tej" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" symbolic="YES" id="pjn-WH-KcY"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="compressButton" destination="hRt-JP-b7L" id="hKr-XF-BM4"/>
                         <outlet property="fileURLLabel" destination="OVq-Ln-E8u" id="E5c-VK-ytv"/>
+                        <outlet property="logTextView" destination="RAU-k5-rLd" id="E2a-AB-asP"/>
                         <outlet property="selectPDFFileButton" destination="SyT-Uc-Tej" id="jsY-Qy-M33"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="75" y="655"/>
+            <point key="canvasLocation" x="75" y="739.5"/>
         </scene>
     </scenes>
 </document>
