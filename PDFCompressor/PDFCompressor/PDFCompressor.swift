@@ -17,6 +17,7 @@ import Quartz
 public class PDFCompressor {
     
     public enum Mode {
+        case dispatchQueueEncode
         case parallelEncode
         case serialEncode
     }
@@ -116,17 +117,96 @@ public class PDFCompressor {
         let inPDF: CGPDFDocument = inFile.documentRef!
         
         switch mode {
+            case .dispatchQueueEncode:
+                try dispatchQueueEncode(inPDF: inPDF, outputURL: outURL, delegate: delegate)
             case .parallelEncode:
                 try parallelEncode(inPDF: inPDF, outputURL: outURL, delegate: delegate)
             case .serialEncode:
                 try serialEncode(inPDF: inPDF, outputURL: outURL, delegate: delegate)
         }
-    
+        
         return (outURL as CFURL)
     }
     
     
     //MARK: - Private Compression Methods
+    private func dispatchQueueEncode(inPDF: CGPDFDocument, outputURL: URL, delegate: SOXTimingDelegate) throws {
+        let tempDir = FileManager().temporaryDirectory
+        var tempURLs: [URL?] = [URL?](repeatElement(nil,
+                                                    count: inPDF.numberOfPages + 1))
+        
+        let concurrentQueue = DispatchQueue(label: "swiftlee.concurrent.queue", attributes: .concurrent)
+        
+        let totalTimer = SOXTiming(title: "Total parallel time \(inPDF.numberOfPages) pages in")
+        
+        let compressionTimer = SOXTiming(title: "compress time \(inPDF.numberOfPages) pages in")
+        
+        for index in 1...inPDF.numberOfPages {
+            let pageIndex = index
+            concurrentQueue.async {
+                // Create an empty temp PDF document
+                let tempURL = tempDir.appendingPathComponent("\(pageIndex)", conformingTo: .pdf)
+                let outPDF = CGContext(tempURL as CFURL, mediaBox: nil, nil)
+                guard let outPDF else {
+                    fatalError() }
+                self.quartz_filter.apply(to: outPDF)  // All PDF pages drawn after the filter is applied will be compressed
+                
+                let timer = SOXTiming(title: "Encode and write temp page \(pageIndex)")
+                
+                // Get current page and its size (bounds) from input document
+                let page: CGPDFPage = inPDF.page(at: pageIndex)!
+                var pageMediaBox: CGRect = page.getBoxRect(.mediaBox)
+                
+                // Redraw current page in output document
+                outPDF.beginPage(mediaBox: &pageMediaBox)
+                outPDF.drawPDFPage(page)
+                outPDF.endPage()
+                outPDF.closePDF()
+                
+                tempURLs[pageIndex] = tempURL
+                timer.stop()
+                
+            }
+        }
+        
+        
+        compressionTimer.stop(delegate: delegate)
+        
+        try concurrentQueue.sync(flags: .barrier) {
+            // Assemble and write final PDF
+            let outContext = CGContext(outputURL as CFURL, mediaBox: nil, nil)
+            guard let outContext else {
+                throw  NSError(domain: "cgcontext", code: 100) }
+            let outPDF: CGContext = outContext
+            
+            let writeTimer = SOXTiming(title: "Wrinting")
+            for index in 1...inPDF.numberOfPages {
+                let timer = SOXTiming(title: "assemble final pdf: temp page \(index)")
+                let tempURL: URL = tempURLs[index]!
+                guard let inTempFile = PDFDocument(url: tempURL) else {
+                    throw PDFCompressionError.PDFFileNotFoundError(fileURL: tempURL.absoluteURL)
+                }
+                
+                // Get original input PDF document at 'inURL'
+                let inTempPDF: CGPDFDocument = inTempFile.documentRef!
+                let page: CGPDFPage = inTempPDF.page(at: 1)!
+                var pageMediaBox: CGRect = page.getBoxRect(.mediaBox)
+                
+                // Redraw current page in output document
+                outPDF.beginPage(mediaBox: &pageMediaBox)
+                outPDF.drawPDFPage(page)
+                outPDF.endPage()
+                
+                
+                timer.stop(delegate: delegate)
+            }
+            writeTimer.stop(delegate: delegate)
+            outPDF.closePDF()
+            totalTimer.stop(delegate: delegate)
+        }
+    }
+    
+    
     private func parallelEncode(inPDF: CGPDFDocument, outputURL: URL, delegate: SOXTimingDelegate) throws {
         let tempDir = FileManager().temporaryDirectory
         var tempURLs: [URL?] = [URL?](repeatElement(nil,
@@ -135,6 +215,7 @@ public class PDFCompressor {
         let totalTimer = SOXTiming(title: "Total parallel time \(inPDF.numberOfPages) pages in")
         
         let compressionTimer = SOXTiming(title: "compress time \(inPDF.numberOfPages) pages in")
+        
         
         // Parallel compression to single page temp files
         tempURLs.withUnsafeMutableBufferPointer { tempURLsBuffer in
@@ -148,7 +229,7 @@ public class PDFCompressor {
                 guard let outPDF else {
                     fatalError() }
                 self.quartz_filter.apply(to: outPDF)  // All PDF pages drawn after the filter is applied will be compressed
-
+                
                 let timer = SOXTiming(title: "Encode and write temp page \(pageIndex)")
                 
                 // Get current page and its size (bounds) from input document
@@ -160,14 +241,16 @@ public class PDFCompressor {
                 outPDF.drawPDFPage(page)
                 outPDF.endPage()
                 outPDF.closePDF()
-
+                
                 tempURLsBuffer[pageIndex] = tempURL
-
-                timer.stop()
+                DispatchQueue.main.async {
+                    timer.stop()
+                }
             })
         }
         
         compressionTimer.stop(delegate: delegate)
+        
         
         // Assemble and write final PDF
         let outContext = CGContext(outputURL as CFURL, mediaBox: nil, nil)
@@ -199,6 +282,7 @@ public class PDFCompressor {
         writeTimer.stop(delegate: delegate)
         outPDF.closePDF()
         totalTimer.stop(delegate: delegate)
+        
     }
     
     

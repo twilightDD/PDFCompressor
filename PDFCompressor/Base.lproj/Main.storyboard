@@ -728,26 +728,6 @@
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="hRt-JP-b7L">
-                                <rect key="frame" x="389" y="13" width="78" height="32"/>
-                                <buttonCell key="cell" type="push" title="Parallel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="yJ5-hx-Ehc">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                </buttonCell>
-                                <connections>
-                                    <action selector="parallelCompressButtonAction:" target="XfG-lQ-9wD" id="N2c-E7-Xi7"/>
-                                </connections>
-                            </button>
-                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="AmV-Er-DwX">
-                                <rect key="frame" x="315" y="13" width="68" height="32"/>
-                                <buttonCell key="cell" type="push" title="Serial" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="UWY-lR-1OC">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                </buttonCell>
-                                <connections>
-                                    <action selector="serialCompressButtonAction:" target="XfG-lQ-9wD" id="Fdm-wq-L5B"/>
-                                </connections>
-                            </button>
                             <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" translatesAutoresizingMaskIntoConstraints="NO" id="q7X-Op-tmi">
                                 <rect key="frame" x="20" y="54" width="440" height="190"/>
                                 <clipView key="contentView" drawsBackground="NO" id="SEQ-Nh-dg2">
@@ -774,8 +754,39 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="hRt-JP-b7L">
+                                <rect key="frame" x="294" y="13" width="78" height="32"/>
+                                <buttonCell key="cell" type="push" title="Parallel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="yJ5-hx-Ehc">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="parallelCompressButtonAction:" target="XfG-lQ-9wD" id="N2c-E7-Xi7"/>
+                                </connections>
+                            </button>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="AmV-Er-DwX">
+                                <rect key="frame" x="220" y="13" width="68" height="32"/>
+                                <buttonCell key="cell" type="push" title="Serial" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="UWY-lR-1OC">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="serialCompressButtonAction:" target="XfG-lQ-9wD" id="Fdm-wq-L5B"/>
+                                </connections>
+                            </button>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="aIi-TP-kn1">
+                                <rect key="frame" x="379" y="13" width="88" height="32"/>
+                                <buttonCell key="cell" type="push" title="Disptach" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Cqv-tS-vwI">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="dispatchQueueCompressButtonAction:" target="XfG-lQ-9wD" id="t4F-bG-aJs"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <constraints>
+                            <constraint firstAttribute="trailing" secondItem="aIi-TP-kn1" secondAttribute="trailing" constant="20" symbolic="YES" id="2fg-dO-yaB"/>
                             <constraint firstItem="AmV-Er-DwX" firstAttribute="top" secondItem="hRt-JP-b7L" secondAttribute="top" id="77V-6e-gg0"/>
                             <constraint firstAttribute="trailing" secondItem="OVq-Ln-E8u" secondAttribute="trailing" constant="20" symbolic="YES" id="9wT-86-B8B"/>
                             <constraint firstItem="SyT-Uc-Tej" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="20" symbolic="YES" id="Ctw-gp-SMW"/>
@@ -784,16 +795,18 @@
                             <constraint firstItem="OVq-Ln-E8u" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="22" id="NIl-5l-5bI"/>
                             <constraint firstItem="q7X-Op-tmi" firstAttribute="top" secondItem="OVq-Ln-E8u" secondAttribute="bottom" constant="8" symbolic="YES" id="Npe-BX-tn5"/>
                             <constraint firstItem="q7X-Op-tmi" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" symbolic="YES" id="Pzj-u4-9Ra"/>
-                            <constraint firstAttribute="trailing" secondItem="hRt-JP-b7L" secondAttribute="trailing" constant="20" symbolic="YES" id="She-ba-cK8"/>
                             <constraint firstItem="OVq-Ln-E8u" firstAttribute="top" secondItem="SyT-Uc-Tej" secondAttribute="bottom" constant="23" id="Vl3-o2-7LC"/>
                             <constraint firstItem="hRt-JP-b7L" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" id="Wt3-Te-xFi"/>
                             <constraint firstItem="hRt-JP-b7L" firstAttribute="leading" secondItem="AmV-Er-DwX" secondAttribute="trailing" constant="20" id="XBi-zo-9wT"/>
                             <constraint firstItem="AmV-Er-DwX" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" symbolic="YES" id="bea-Nl-qzl"/>
+                            <constraint firstItem="aIi-TP-kn1" firstAttribute="top" secondItem="hRt-JP-b7L" secondAttribute="top" id="dUe-zr-gcP"/>
                             <constraint firstAttribute="trailing" secondItem="q7X-Op-tmi" secondAttribute="trailing" constant="20" symbolic="YES" id="mH2-Rl-D5U"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="SyT-Uc-Tej" secondAttribute="trailing" constant="20" id="mUy-gi-btb"/>
                             <constraint firstItem="hRt-JP-b7L" firstAttribute="top" secondItem="q7X-Op-tmi" secondAttribute="bottom" constant="14" id="maN-aA-ukh"/>
+                            <constraint firstItem="aIi-TP-kn1" firstAttribute="bottom" secondItem="hRt-JP-b7L" secondAttribute="bottom" id="n5S-Hu-02v"/>
                             <constraint firstItem="AmV-Er-DwX" firstAttribute="bottom" secondItem="hRt-JP-b7L" secondAttribute="bottom" id="n9n-0i-LRs"/>
                             <constraint firstItem="SyT-Uc-Tej" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" symbolic="YES" id="pjn-WH-KcY"/>
+                            <constraint firstItem="aIi-TP-kn1" firstAttribute="leading" secondItem="hRt-JP-b7L" secondAttribute="trailing" constant="21" id="uSr-Rh-3Zp"/>
                         </constraints>
                     </view>
                     <connections>

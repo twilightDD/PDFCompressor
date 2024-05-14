@@ -21,7 +21,6 @@ class ViewController: NSViewController {
     @IBOutlet weak var selectPDFFileButton: NSButton!
     @IBOutlet weak var fileURLLabel: NSTextField!
     @IBOutlet weak var logTextView: NSTextView!
-    @IBOutlet weak var compressButton: NSButton!
     
     
     //MARK: - Init&Co
@@ -61,13 +60,19 @@ class ViewController: NSViewController {
             return
         }
     }
-    @IBAction func serialCompressButtonAction(_ sender: NSButton) {
-        startCompression(mode: .serialEncode)
+    
+    @IBAction func dispatchQueueCompressButtonAction(_ sender: NSButton) {
+        startCompression(mode: .dispatchQueueEncode)
     }
     
     @IBAction func parallelCompressButtonAction(_ sender: NSButton) {
         startCompression(mode: .parallelEncode)
     }
+
+    @IBAction func serialCompressButtonAction(_ sender: NSButton) {
+        startCompression(mode: .serialEncode)
+    }
+    
     
     private func startCompression(mode: PDFCompressor.Mode) {
         guard let inputURL else {
