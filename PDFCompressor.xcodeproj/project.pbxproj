@@ -15,6 +15,7 @@
 		D014F6AA2BEE3B20009237AB /* PDFCompressionError.swift in Sources */ = {isa = PBXBuildFile; fileRef = D014F6A72BEE3B20009237AB /* PDFCompressionError.swift */; };
 		D014F6AB2BEE3B20009237AB /* PDFCompressor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D014F6A82BEE3B20009237AB /* PDFCompressor.swift */; };
 		D014F6AD2BEE49E1009237AB /* SOXTiming.swift in Sources */ = {isa = PBXBuildFile; fileRef = D014F6AC2BEE49E1009237AB /* SOXTiming.swift */; };
+		D08298382BF4252F00515B0D /* SOXQuartzFiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08298372BF4252F00515B0D /* SOXQuartzFiler.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,7 @@
 		D014F6A72BEE3B20009237AB /* PDFCompressionError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDFCompressionError.swift; sourceTree = "<group>"; };
 		D014F6A82BEE3B20009237AB /* PDFCompressor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDFCompressor.swift; sourceTree = "<group>"; };
 		D014F6AC2BEE49E1009237AB /* SOXTiming.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SOXTiming.swift; sourceTree = "<group>"; };
+		D08298372BF4252F00515B0D /* SOXQuartzFiler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOXQuartzFiler.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +81,7 @@
 				D014F6A42BEE3B20009237AB /* Resources */,
 				D014F6A72BEE3B20009237AB /* PDFCompressionError.swift */,
 				D014F6A82BEE3B20009237AB /* PDFCompressor.swift */,
+				D08298372BF4252F00515B0D /* SOXQuartzFiler.swift */,
 			);
 			path = PDFCompressor;
 			sourceTree = "<group>";
@@ -172,6 +175,7 @@
 			files = (
 				D014F6AA2BEE3B20009237AB /* PDFCompressionError.swift in Sources */,
 				D014F6AB2BEE3B20009237AB /* PDFCompressor.swift in Sources */,
+				D08298382BF4252F00515B0D /* SOXQuartzFiler.swift in Sources */,
 				D014F6962BEE3AFF009237AB /* ViewController.swift in Sources */,
 				D014F6942BEE3AFF009237AB /* AppDelegate.swift in Sources */,
 				D014F6AD2BEE49E1009237AB /* SOXTiming.swift in Sources */,

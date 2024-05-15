@@ -16,10 +16,27 @@ class ViewController: NSViewController {
     private var outputURL: URL?
     private var mode: PDFCompressor.Mode = .serialEncode
     
+    private var compressionValue: Double = 0.7 {
+        didSet {
+            compressionValueTextField.stringValue = String(format: "%3.0f %%", compressionValue * 100)
+        }
+    }
+    private var scaleValue: Double = 0.9 {
+        didSet {
+            scaleValueTextField.stringValue = String(format: "%3.0f %%", scaleValue * 100)
+        }
+    }
+    
     //MARK: - IBOutlets
     
     @IBOutlet weak var selectPDFFileButton: NSButton!
     @IBOutlet weak var fileURLLabel: NSTextField!
+    
+    @IBOutlet weak var compressionSlider: NSSlider!
+    @IBOutlet weak var compressionValueTextField: NSTextField!
+    @IBOutlet weak var scaleSlider: NSSlider!
+    @IBOutlet weak var scaleValueTextField: NSTextField!
+    
     @IBOutlet weak var logTextView: NSTextView!
     
     
@@ -28,6 +45,16 @@ class ViewController: NSViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        compressionSlider.minValue = 0.1
+        compressionSlider.maxValue = 1.0
+        compressionSlider.doubleValue = compressionValue
+        compressionValueTextField.stringValue = String(format: "%3.0f %%", compressionValue * 100)
+        
+        scaleSlider.minValue = 0.1
+        scaleSlider.maxValue = 1.0
+        scaleSlider.doubleValue = scaleValue
+        scaleValueTextField.stringValue = String(format: "%3.0f %%", scaleValue * 100)
+        
     }
 
     override var representedObject: Any? {
@@ -38,6 +65,16 @@ class ViewController: NSViewController {
 
     
     //MARK: - Action Methods
+    @IBAction func compressionSliderAction(_ sender: NSSlider) {
+        compressionValue = sender.doubleValue
+    }
+    
+    
+    @IBAction func scaleSliderAction(_ sender: NSSlider) {
+        scaleValue = sender.doubleValue
+    }
+    
+    
     @IBAction func selectPDFFileButtonAction(_ sender: NSButton) {
         let dialog = NSOpenPanel()
         
@@ -89,7 +126,9 @@ class ViewController: NSViewController {
 //        outputURL = outURL
         let pdfCompressor = PDFCompressor()
         do {
-            try pdfCompressor.compress(inputURL, out: outputURL, mode: mode, delegate: self)
+            try pdfCompressor.compress(inputURL, out: outputURL,
+                                       compression: compressionValue, scale: scaleValue,
+                                       mode: mode, delegate: self)
         }
         catch let compressError {
             print("\(compressError)")
@@ -109,7 +148,7 @@ class ViewController: NSViewController {
         outputURL = outURL
         
         let dialog = NSSavePanel()
-        dialog.title                   = "Choose a directory"
+        dialog.title                   = "Choose a destination file"
         dialog.showsResizeIndicator    = true
         dialog.showsHiddenFiles        = false
         dialog.allowedContentTypes     = [.pdf]

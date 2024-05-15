@@ -88,12 +88,15 @@ public class PDFCompressor {
     /// - Returns: location of output document context.
     @discardableResult
     public func compress(_ inPath: String, out outPath: String,
+                         compression: Double, scale: Double,
                          mode: Mode, delegate: SOXTimingDelegate) throws
     -> CFURL {
         let inURL = URL(fileURLWithPath: inPath)
         let outURL = URL(fileURLWithPath: outPath)
         
-        return try self.compress(inURL, out: outURL, mode: mode, delegate: delegate)
+        return try self.compress(inURL, out: outURL,
+                                 compression: compression, scale: scale,
+                                 mode: mode, delegate: delegate)
     }
     
     
@@ -106,7 +109,9 @@ public class PDFCompressor {
     ///            if PDF file at `inURL` is not found.
     /// - Returns: location of output document context.
     @discardableResult
-    public func compress(_ inURL: URL, out outURL: URL, mode: Mode, delegate: SOXTimingDelegate) throws
+    public func compress(_ inURL: URL, out outURL: URL,
+                         compression: Double, scale: Double,
+                         mode: Mode, delegate: SOXTimingDelegate) throws
     -> CFURL {
         // Make sure input PDF file at 'inURL' is valid
         guard let inFile = PDFDocument(url: inURL) else {
@@ -118,11 +123,17 @@ public class PDFCompressor {
         
         switch mode {
             case .dispatchQueueEncode:
-                try dispatchQueueEncode(inPDF: inPDF, outputURL: outURL, delegate: delegate)
+                try dispatchQueueEncode(inPDF: inPDF, outputURL: outURL,
+                                        compression: compression, scale: scale,
+                                        delegate: delegate)
             case .parallelEncode:
-                try parallelEncode(inPDF: inPDF, outputURL: outURL, delegate: delegate)
+                try parallelEncode(inPDF: inPDF, outputURL: outURL,
+                                   compression: compression, scale: scale,
+                                   delegate: delegate)
             case .serialEncode:
-                try serialEncode(inPDF: inPDF, outputURL: outURL, delegate: delegate)
+                try serialEncode(inPDF: inPDF, outputURL: outURL,
+                                 compression: compression, scale: scale,
+                                 delegate: delegate)
         }
         
         return (outURL as CFURL)
@@ -130,7 +141,9 @@ public class PDFCompressor {
     
     
     //MARK: - Private Compression Methods
-    private func dispatchQueueEncode(inPDF: CGPDFDocument, outputURL: URL, delegate: SOXTimingDelegate) throws {
+    private func dispatchQueueEncode(inPDF: CGPDFDocument, outputURL: URL,
+                                     compression: Double, scale: Double,
+                                     delegate: SOXTimingDelegate) throws {
         let tempDir = FileManager().temporaryDirectory
         var tempURLs: [URL?] = [URL?](repeatElement(nil,
                                                     count: inPDF.numberOfPages + 1))
@@ -149,7 +162,9 @@ public class PDFCompressor {
                 let outPDF = CGContext(tempURL as CFURL, mediaBox: nil, nil)
                 guard let outPDF else {
                     fatalError() }
-                self.quartz_filter.apply(to: outPDF)  // All PDF pages drawn after the filter is applied will be compressed
+                guard let quartzFilter = SOXQuartzFiler.quartzFilter(compression: compression, scale: scale) else {
+                    return }
+                quartzFilter.apply(to: outPDF)  // All PDF pages drawn after the filter is applied will be compressed
                 
                 let timer = SOXTiming(title: "Encode and write temp page \(pageIndex)")
                 
@@ -207,7 +222,9 @@ public class PDFCompressor {
     }
     
     
-    private func parallelEncode(inPDF: CGPDFDocument, outputURL: URL, delegate: SOXTimingDelegate) throws {
+    private func parallelEncode(inPDF: CGPDFDocument, outputURL: URL,
+                                compression: Double, scale: Double,
+                                delegate: SOXTimingDelegate) throws {
         let tempDir = FileManager().temporaryDirectory
         var tempURLs: [URL?] = [URL?](repeatElement(nil,
                                                     count: inPDF.numberOfPages + 1))
@@ -228,7 +245,9 @@ public class PDFCompressor {
                 let outPDF = CGContext(tempURL as CFURL, mediaBox: nil, nil)
                 guard let outPDF else {
                     fatalError() }
-                self.quartz_filter.apply(to: outPDF)  // All PDF pages drawn after the filter is applied will be compressed
+                guard let quartzFilter = SOXQuartzFiler.quartzFilter(compression: compression, scale: scale) else {
+                    return }
+                quartzFilter.apply(to: outPDF)  // All PDF pages drawn after the filter is applied will be compressed
                 
                 let timer = SOXTiming(title: "Encode and write temp page \(pageIndex)")
                 
@@ -286,13 +305,17 @@ public class PDFCompressor {
     }
     
     
-    private func serialEncode(inPDF: CGPDFDocument, outputURL: URL, delegate: SOXTimingDelegate) throws {
+    private func serialEncode(inPDF: CGPDFDocument, outputURL: URL,
+                              compression: Double, scale: Double,
+                              delegate: SOXTimingDelegate) throws {
         
         // Create outputPDF with compression filter.
         let outPDF = CGContext(outputURL as CFURL, mediaBox: nil, nil)
         guard let outPDF else {
             throw  NSError(domain: "cgcontext", code: 100) }
-        self.quartz_filter.apply(to: outPDF) // All PDF pages drawn after the filter is applied will be compressed
+        guard let quartzFilter = SOXQuartzFiler.quartzFilter(compression: compression, scale: scale) else {
+            return }
+        quartzFilter.apply(to: outPDF)  // All PDF pages drawn after the filter is applied will be compressed
         
         let totalTimer = SOXTiming(title: "Total serial time \(inPDF.numberOfPages) pages in")
         
