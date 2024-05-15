@@ -38,6 +38,7 @@ class ViewController: NSViewController {
     @IBOutlet weak var scaleValueTextField: NSTextField!
     
     @IBOutlet weak var logTextView: NSTextView!
+    @IBOutlet weak var clearLogButton: NSButton!
     
     
     //MARK: - Init&Co
@@ -110,7 +111,11 @@ class ViewController: NSViewController {
         startCompression(mode: .serialEncode)
     }
     
+    @IBAction func clearLogButtonAction(_ sender: NSButton) {
+        logTextView.string = ""
+    }
     
+    //MARK: - Private Methods
     private func startCompression(mode: PDFCompressor.Mode) {
         guard let inputURL else {
             return }
@@ -167,6 +172,9 @@ class ViewController: NSViewController {
     }
 }
 
+
+//MARK: -
+//MARK: - SOXTimingDelegate
 extension ViewController: SOXTimingDelegate {
     
     func addToLog(_ logline: String) {
