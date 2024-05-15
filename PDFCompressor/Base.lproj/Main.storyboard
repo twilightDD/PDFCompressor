@@ -760,7 +760,7 @@
                                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <size key="minSize" width="425" height="283"/>
-                                            <size key="maxSize" width="436" height="10000000"/>
+                                            <size key="maxSize" width="440" height="10000000"/>
                                             <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                         </textView>
                                     </subviews>
@@ -844,6 +844,16 @@
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="xav-Vq-lDi">
+                                <rect key="frame" x="13" y="13" width="45" height="32"/>
+                                <buttonCell key="cell" type="push" bezelStyle="rounded" image="trash" catalog="system" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="qdK-rM-qLX">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="clearLogButtonAction:" target="XfG-lQ-9wD" id="vBb-dy-xgW"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <constraints>
                             <constraint firstItem="OVq-Ln-E8u" firstAttribute="leading" secondItem="SyT-Uc-Tej" secondAttribute="trailing" constant="8" symbolic="YES" id="1ZK-T1-Mov"/>
@@ -859,11 +869,14 @@
                             <constraint firstItem="OVq-Ln-E8u" firstAttribute="firstBaseline" secondItem="SyT-Uc-Tej" secondAttribute="firstBaseline" id="C8x-EV-iV1"/>
                             <constraint firstItem="SyT-Uc-Tej" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="20" symbolic="YES" id="Ctw-gp-SMW"/>
                             <constraint firstItem="AmV-Er-DwX" firstAttribute="width" secondItem="hRt-JP-b7L" secondAttribute="width" multiplier="0.84375" id="EjX-YS-SIZ"/>
+                            <constraint firstItem="xav-Vq-lDi" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" symbolic="YES" id="FTt-Ui-usF"/>
                             <constraint firstAttribute="trailing" secondItem="OVq-Ln-E8u" secondAttribute="trailing" constant="20" symbolic="YES" id="HzR-gj-JRc"/>
                             <constraint firstAttribute="bottom" secondItem="hRt-JP-b7L" secondAttribute="bottom" constant="20" symbolic="YES" id="KYI-Jy-Xfo"/>
                             <constraint firstItem="Hd9-qX-Fd5" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="22" id="LWN-fn-0Rg"/>
+                            <constraint firstItem="AmV-Er-DwX" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="xav-Vq-lDi" secondAttribute="trailing" constant="20" id="LkJ-P8-OQI"/>
                             <constraint firstItem="gFw-P4-9vC" firstAttribute="top" secondItem="JNw-IT-Nxy" secondAttribute="bottom" constant="8" symbolic="YES" id="MRg-lK-M2u"/>
                             <constraint firstItem="q7X-Op-tmi" firstAttribute="top" secondItem="Hd9-qX-Fd5" secondAttribute="bottom" constant="8" symbolic="YES" id="NPv-b7-Sm7"/>
+                            <constraint firstItem="xav-Vq-lDi" firstAttribute="centerY" secondItem="AmV-Er-DwX" secondAttribute="centerY" id="NQJ-5F-DcK"/>
                             <constraint firstItem="q7X-Op-tmi" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" symbolic="YES" id="Pzj-u4-9Ra"/>
                             <constraint firstItem="gFw-P4-9vC" firstAttribute="leading" secondItem="JNw-IT-Nxy" secondAttribute="leading" id="QIa-KX-IpS"/>
                             <constraint firstItem="Kah-dV-AH6" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" symbolic="YES" id="T8p-uL-yVi"/>
@@ -873,7 +886,6 @@
                             <constraint firstItem="Kah-dV-AH6" firstAttribute="top" secondItem="gFw-P4-9vC" secondAttribute="bottom" constant="10" id="YbR-rf-Zul"/>
                             <constraint firstItem="oVq-Qa-vYP" firstAttribute="centerY" secondItem="Nop-pU-ZMY" secondAttribute="centerY" id="Zfa-SN-JU0"/>
                             <constraint firstItem="Hd9-qX-Fd5" firstAttribute="top" secondItem="Kah-dV-AH6" secondAttribute="bottom" constant="8" symbolic="YES" id="bSg-Vh-RwC"/>
-                            <constraint firstItem="AmV-Er-DwX" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" symbolic="YES" id="bea-Nl-qzl"/>
                             <constraint firstItem="aIi-TP-kn1" firstAttribute="top" secondItem="hRt-JP-b7L" secondAttribute="top" id="dUe-zr-gcP"/>
                             <constraint firstItem="oVq-Qa-vYP" firstAttribute="leading" secondItem="R9b-oC-wDR" secondAttribute="leading" id="eBx-cL-QMC"/>
                             <constraint firstItem="R9b-oC-wDR" firstAttribute="firstBaseline" secondItem="jOn-cJ-JtV" secondAttribute="firstBaseline" id="ggs-LY-Tc7"/>
@@ -884,6 +896,7 @@
                             <constraint firstItem="hRt-JP-b7L" firstAttribute="top" secondItem="q7X-Op-tmi" secondAttribute="bottom" constant="14" id="maN-aA-ukh"/>
                             <constraint firstItem="aIi-TP-kn1" firstAttribute="bottom" secondItem="hRt-JP-b7L" secondAttribute="bottom" id="n5S-Hu-02v"/>
                             <constraint firstItem="AmV-Er-DwX" firstAttribute="bottom" secondItem="hRt-JP-b7L" secondAttribute="bottom" id="n9n-0i-LRs"/>
+                            <constraint firstAttribute="bottom" secondItem="xav-Vq-lDi" secondAttribute="bottom" constant="20" symbolic="YES" id="nHS-0z-XXc"/>
                             <constraint firstItem="Nop-pU-ZMY" firstAttribute="trailing" secondItem="jOn-cJ-JtV" secondAttribute="trailing" id="pg8-wn-Ztq"/>
                             <constraint firstItem="SyT-Uc-Tej" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" symbolic="YES" id="pjn-WH-KcY"/>
                             <constraint firstItem="Nop-pU-ZMY" firstAttribute="centerY" secondItem="gFw-P4-9vC" secondAttribute="centerY" id="uEZ-g8-2xE"/>
@@ -892,6 +905,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="clearLogButton" destination="xav-Vq-lDi" id="Gfb-bh-n1T"/>
                         <outlet property="compressionSlider" destination="jOn-cJ-JtV" id="DEy-wQ-zot"/>
                         <outlet property="compressionValueTextField" destination="R9b-oC-wDR" id="RmL-JK-gWq"/>
                         <outlet property="fileURLLabel" destination="OVq-Ln-E8u" id="E5c-VK-ytv"/>
@@ -906,4 +920,7 @@
             <point key="canvasLocation" x="-90" y="763"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="trash" catalog="system" width="15" height="17"/>
+    </resources>
 </document>
